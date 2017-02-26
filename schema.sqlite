@@ -1,0 +1,54 @@
+create table Staff(
+	name text not null unique,
+	role text not null,
+	pin int not null,
+	clocked_in boolean not null
+);
+
+create table Shift_Log(
+	staff_id int not null,
+	action boolean not null,
+	datetime int not null,
+	foreign key (staff_id) references Staff(rowid)
+);
+
+create table Category(
+	name text not null unique
+);
+
+create table Menu(
+	name text not null unique,
+	category_id int not null,
+	price real not null,
+	foreign key (category_id) references Category(rowid)
+);
+
+create table Tables(
+	capacity int not null
+);
+
+create table Party(
+	staff_id int not null,
+	datetime_in int not null,
+	datetime_out int,
+	table_id int not null,
+	foreign key (staff_id) references Staff(rowid),
+	foreign key (table_id) references Tables(rowid)
+);
+
+create table Orders(
+	party_id int not null,
+	menu_id int not null,
+	person_id int not null,
+	foreign key (party_id) references Party(rowid),
+	foreign key (menu_id) references Menu(rowid)
+);
+
+create table Bill(
+	party_id int not null,
+	person_id int not null,
+	subtotal real not null,
+	tip real,
+	foreign key (party_id) references Party(rowid),
+	foreign key (person_id) references Orders(person_id)
+);
